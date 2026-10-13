@@ -1,0 +1,90 @@
+@import "tailwindcss";
+@font-face {
+  font-family: "Space Grotesk Variable";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 300 700;
+  src: url("@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2") format("woff2-variations");
+}
+@font-face {
+  font-family: "DM Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url("@fontsource/dm-mono/files/dm-mono-latin-400-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "DM Mono";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url("@fontsource/dm-mono/files/dm-mono-latin-500-normal.woff2") format("woff2");
+}
+
+@theme {
+  --color-ink: #090a0b;
+  --color-paper: #efefea;
+  --color-accent: #e63228;
+  --font-sans: "Space Grotesk Variable", "Space Grotesk", Arial, sans-serif;
+  --font-mono: "DM Mono", Consolas, monospace;
+}
+
+@layer base {
+  :root { color-scheme: dark; font-family: var(--font-sans); font-synthesis: none; text-rendering: optimizeLegibility; }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: auto; scroll-padding-top: 88px; }
+  body { min-width: 320px; margin: 0; background: var(--color-ink); color: var(--color-paper); }
+  a { color: inherit; text-decoration: none; }
+  button { font: inherit; color: inherit; }
+  button:focus-visible, a:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 4px; }
+  ::selection { background: var(--color-accent); color: var(--color-paper); }
+}
+
+/* Shared width token for page-aligned navigation and sections. */
+.page-wrap { width: min(1320px, calc(100% - 96px)); margin-inline: auto; }
+.outline-type { color: transparent; -webkit-text-stroke: 1px #777873; }
+.ambient-grid { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .24; background-image: linear-gradient(90deg, transparent calc(25% - .5px), #30302e 25%, transparent calc(25% + .5px), transparent calc(50% - .5px), #30302e 50%, transparent calc(50% + .5px), transparent calc(75% - .5px), #30302e 75%, transparent calc(75% + .5px)); mask-image: linear-gradient(180deg, #000 0%, #000 55%, transparent 100%); }
+.hero-orbit { border-color: #252624; }
+.hero-orbit::before, .hero-orbit::after { position: absolute; inset: 12%; border: 1px solid #242523; border-radius: 50%; content: ""; }
+.hero-orbit::after { inset: 30%; border-color: #372421; }
+.hero-orbit > span { position: absolute; top: -10px; left: 50%; color: var(--color-accent); font-size: 19px; }
+
+/* Aura artwork is abstract project art, never represented as an application screenshot. */
+.aura-artwork { position: relative; display: grid; width: 100%; aspect-ratio: 1.78; overflow: hidden; place-items: center; border: 1px solid #383936; background: radial-gradient(ellipse at 52% 50%, #291816 0%, #171312 38%, #101111 78%); }
+.aura-artwork-compact { aspect-ratio: 1.45; }
+.aura-art-grid { position: absolute; inset: 0; opacity: .34; background-image: linear-gradient(#77736e30 1px, transparent 1px), linear-gradient(90deg, #77736e30 1px, transparent 1px); background-size: 9% 14%; mask-image: radial-gradient(ellipse, #000, transparent 78%); }
+.aura-ring { position: absolute; aspect-ratio: 1; border: 1px solid #e6322830; border-radius: 50%; }
+.aura-ring-outer { width: 78%; border-color: #d2c4b515; }
+.aura-ring-middle { width: 59%; border-color: #d2c4b526; }
+.aura-ring-inner { width: 42%; border-color: #e6322860; }
+.aura-disc { position: relative; display: grid; width: 25%; aspect-ratio: 1; place-items: center; border: 1px solid #e6322877; border-radius: 50%; background: radial-gradient(circle, #e63228 0 3%, #160e0d 4% 24%, #261615 25% 26%, #141313 27%); box-shadow: 0 0 90px #e6322820; }
+.aura-disc span { color: #f0eee6; font-size: clamp(24px, 5vw, 70px); font-weight: 600; letter-spacing: -.1em; }
+.aura-art-caption, .aura-art-index { position: absolute; z-index: 2; color: #aeaaa2; font: 8px var(--font-mono); letter-spacing: .08em; }
+.aura-art-caption { top: 17px; left: 18px; right: 18px; display: flex; justify-content: space-between; }
+.aura-art-caption span, .aura-art-index { color: #77736d; }
+.aura-art-index { right: 18px; bottom: 16px; }
+.aura-artwork-compact .aura-art-caption, .aura-artwork-compact .aura-art-index { font-size: 7px; }
+
+/* The welcome scene uses layered CSS geometry and very slow motion, with a static reduced-motion fallback. */
+.intro-surface, .intro-surface-grid, .intro-light, .intro-sweep { position: absolute; inset: 0; pointer-events: none; }
+.intro-surface { overflow: hidden; background: radial-gradient(ellipse at 72% 43%, #311c18 0%, transparent 34%), #080909; }
+.intro-surface-grid { opacity: .45; background-image: linear-gradient(#7b777020 1px, transparent 1px), linear-gradient(90deg, #7b777020 1px, transparent 1px); background-size: 6.25vw 8vh; mask-image: radial-gradient(ellipse at 65% 46%, #000, transparent 72%); animation: grid-drift 34s linear infinite; }
+.intro-light { inset: 12% 8% 14% 42%; border: 1px solid #c9bbb014; transform: skewX(-22deg); box-shadow: 0 0 0 60px #c9bbb005, 0 0 0 120px #c9bbb004; }
+.intro-sweep { width: 1px; left: 20%; background: linear-gradient(transparent, #e63228aa, transparent); animation: sweep 8s ease-in-out infinite alternate; }
+@keyframes grid-drift { to { background-position: 6.25vw 8vh; } }
+@keyframes sweep { from { transform: translateX(0); opacity: .15; } to { transform: translateX(60vw); opacity: .65; } }
+
+/* Only the restrained audio level indicator needs a bespoke animation. */
+.sound-bars { display: flex; height: 12px; align-items: center; gap: 2px; }
+.sound-bars i { display: block; width: 2px; height: 4px; background: var(--color-accent); }
+.sound-bars.is-playing i { animation: equalize .7s ease-in-out infinite alternate; }
+.sound-bars.is-playing i:nth-child(2) { animation-delay: -.4s; }
+.sound-bars.is-playing i:nth-child(3) { animation-delay: -.2s; }
+.sound-bars.is-playing i:nth-child(4) { animation-delay: -.55s; }
+@keyframes equalize { to { height: 11px; } }
+
+@media (max-width: 800px) { .page-wrap { width: calc(100% - 48px); } }
+@media (max-width: 520px) { .page-wrap { width: calc(100% - 36px); } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
