@@ -1,0 +1,363 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter);
+  --font-mono: var(--font-dm-mono);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  /* ── ConsoleX design tokens ─────────────────────────────── */
+  --color-cx-bg: var(--cx-bg);
+  --color-cx-bg-2: var(--cx-bg-2);
+  --color-cx-surface: var(--cx-surface);
+  --color-cx-accent: var(--cx-accent);
+  --color-cx-accent-deep: var(--cx-accent-deep);
+  --color-cx-glow: var(--cx-glow);
+  --color-cx-text: var(--cx-text);
+  --color-cx-text-2: var(--cx-text-2);
+  --color-cx-text-3: var(--cx-text-3);
+  --color-cx-border: var(--cx-border);
+  --color-cx-ink-line: var(--cx-ink-line);
+
+  --font-display: var(--font-space-grotesk);
+  --font-body: var(--font-inter);
+  --font-mono2: var(--font-dm-mono);
+}
+
+/* ── ConsoleX token values (light, white + blue) ───────────── */
+:root {
+  --cx-bg: #ffffff;
+  --cx-bg-2: #f4f8ff;
+  --cx-surface: #eaf2ff;
+  --cx-accent: #2563eb;
+  --cx-accent-deep: #1d4ed8;
+  --cx-glow: #38bdf8;
+  --cx-text: #111827;
+  --cx-text-2: #475569;
+  --cx-text-3: #64748b;
+  --cx-border: #dce5f0;
+  --cx-ink-line: #eef3fa;
+
+  /* shadcn compatibility vars (trimmed, light-only) */
+  --background: #ffffff;
+  --foreground: #111827;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --border: #dce5f0;
+  --ring: #93c5fd;
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    border-color: var(--cx-border);
+  }
+  html {
+    color-scheme: light;
+  }
+  body {
+    background: var(--cx-bg);
+    color: var(--cx-text);
+    font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  ::selection {
+    background: rgba(37, 99, 235, 0.14);
+    color: var(--cx-text);
+  }
+  :focus-visible {
+    outline: 2px solid var(--cx-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+}
+
+@layer utilities {
+  .font-display {
+    font-family: var(--font-space-grotesk), var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  }
+  .font-mono2 {
+    font-family: var(--font-dm-mono), ui-monospace, "SF Mono", monospace;
+  }
+  .container-cx {
+    width: 100%;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+  @media (min-width: 768px) {
+    .container-cx {
+      padding-inline: 2.5rem;
+    }
+  }
+  /* section label row */
+  .eyebrow {
+    font-family: var(--font-dm-mono), ui-monospace, monospace;
+    font-size: 0.6875rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--cx-text-3);
+  }
+  /* ghost outline numerals for project rows */
+  .ghost-num {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--cx-border);
+    user-select: none;
+  }
+  .link-sweep {
+    position: relative;
+  }
+  .link-sweep::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    height: 1.5px;
+    width: 100%;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .link-sweep:hover::after,
+  .link-sweep:focus-visible::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+/* ── Reveal-on-scroll primitive ─────────────────────────────── */
+.cx-reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+  will-change: opacity, transform;
+}
+.cx-reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ── Opening sequence ───────────────────────────────────────── */
+.cx-opening {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: var(--cx-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+html.cx-skip-intro .cx-opening {
+  display: none;
+}
+html.cx-intro-lock {
+  overflow: hidden;
+}
+.cx-opening[data-exit="true"] {
+  animation: cx-intro-exit 0.65s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+@keyframes cx-intro-exit {
+  to {
+    transform: translateY(-100%);
+  }
+}
+.cx-intro-letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.6em) rotate(2deg);
+  animation: cx-letter-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes cx-letter-in {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.cx-intro-line {
+  transform-origin: left;
+  transform: scaleX(0);
+  animation: cx-line-grow 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: 0.55s;
+}
+@keyframes cx-line-grow {
+  to {
+    transform: scaleX(1);
+  }
+}
+.cx-intro-tag {
+  opacity: 0;
+  animation: cx-fade-in 0.6s ease-out forwards;
+  animation-delay: 0.75s;
+}
+@keyframes cx-fade-in {
+  to {
+    opacity: 1;
+  }
+}
+.cx-intro-gel {
+  animation: cx-gel-morph 5s ease-in-out infinite alternate;
+  border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%;
+}
+@keyframes cx-gel-morph {
+  0% {
+    border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%;
+  }
+  50% {
+    border-radius: 58% 42% 44% 56% / 44% 58% 42% 56%;
+  }
+  100% {
+    border-radius: 42% 58% 52% 48% / 58% 46% 54% 42%;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-intro-letter,
+  .cx-intro-tag {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .cx-intro-line {
+    transform: scaleX(1);
+    animation: none;
+  }
+}
+
+/* ── Gel fallback (no WebGL) ────────────────────────────────── */
+.cx-gel-fallback {
+  border-radius: 46% 54% 58% 42% / 52% 44% 56% 48%;
+  animation: cx-gel-morph 9s ease-in-out infinite alternate;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-gel-fallback {
+    animation: none;
+  }
+}
+
+/* ── Status pulse (in-development dot) ──────────────────────── */
+.cx-pulse {
+  position: relative;
+}
+.cx-pulse::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: 9999px;
+  border: 1.5px solid var(--cx-accent);
+  opacity: 0;
+  animation: cx-pulse-ring 2.2s ease-out infinite;
+}
+@keyframes cx-pulse-ring {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-pulse::after {
+    animation: none;
+    opacity: 0;
+  }
+}
+
+/* ── Aura illustration micro-animations ─────────────────────── */
+.cx-spin {
+  animation: cx-spin 14s linear infinite;
+}
+@keyframes cx-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-spin {
+    animation: none;
+  }
+}
+.cx-eq-bar {
+  transform-origin: bottom;
+  animation: cx-eq 1.6s ease-in-out infinite alternate;
+  animation-delay: var(--d, 0ms);
+}
+@keyframes cx-eq {
+  from {
+    transform: scaleY(0.45);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-eq-bar {
+    animation: none;
+    transform: none;
+  }
+}
+
+/* ── View transitions (home ↔ aura) ────────────────────────── */
+.cx-view-enter {
+  animation: cx-view-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+@keyframes cx-view-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cx-view-enter {
+    animation: none;
+  }
+}
+
+/* scrollbar (subtle, blue-tinted) */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cx-bg);
+}
+::-webkit-scrollbar-thumb {
+  background: #c7d8f0;
+  border-radius: 8px;
+  border: 2px solid var(--cx-bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #9fc0ea;
+}
