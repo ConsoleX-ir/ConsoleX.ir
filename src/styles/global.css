@@ -1,0 +1,216 @@
+/* ------------------------------------------------------------------
+   CONSOLEX — global styles & design tokens
+   Tailwind CSS 4 (CSS-first configuration via @theme)
+   Palette: monochrome + signal red. Type: Space Grotesk / DM Mono.
+------------------------------------------------------------------- */
+@import '@fontsource-variable/space-grotesk';
+@import '@fontsource/dm-mono/400.css';
+@import '@fontsource/dm-mono/500.css';
+@import 'tailwindcss';
+
+@theme {
+  /* ---- palette ---------------------------------------------------- */
+  --color-bg: #080808;
+  --color-surface: #111111;
+  --color-elevated: #181818;
+  --color-ink: #f5f5f5;
+  --color-dim: #a3a3a3;
+  --color-faint: #707070;
+  --color-red: #e63228;
+  --color-red-bright: #ff4136;
+  --color-line: #303030;
+  --color-line-soft: #1e1e1e;
+
+  /* ---- typography -------------------------------------------------- */
+  --font-sans: 'Space Grotesk Variable', 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'DM Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  /* fluid display scale */
+  --text-display: clamp(3.4rem, 13.2vw, 12.5rem);
+  --text-display--line-height: 0.88;
+  --text-display--letter-spacing: -0.035em;
+  --text-display--font-weight: 600;
+
+  --text-title: clamp(2.4rem, 5.6vw, 4.9rem);
+  --text-title--line-height: 0.95;
+  --text-title--letter-spacing: -0.03em;
+
+  --text-project: clamp(1.9rem, 3.4vw, 3.25rem);
+  --text-project--line-height: 0.98;
+  --text-project--letter-spacing: -0.02em;
+
+  --text-statement: clamp(1.55rem, 3.1vw, 2.85rem);
+  --text-statement--line-height: 1.14;
+  --text-statement--letter-spacing: -0.018em;
+
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.3;
+  --text-micro--letter-spacing: 0.16em;
+
+  --text-label: 0.75rem;
+  --text-label--line-height: 1.3;
+  --text-label--letter-spacing: 0.12em;
+
+  /* ---- motion ------------------------------------------------------ */
+  --ease-swift: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-snap: cubic-bezier(0.85, 0, 0.15, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --animate-marquee: marquee 42s linear infinite;
+  --animate-blink: blink 1.5s steps(2, start) infinite;
+  --animate-orb: orb 9s ease-in-out infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @keyframes blink {
+    to { visibility: hidden; }
+  }
+  @keyframes orb {
+    0%, 100% { transform: translate3d(0, 0, 0) scale(1); }
+    33%      { transform: translate3d(6%, -8%, 0) scale(1.08); }
+    66%      { transform: translate3d(-7%, 6%, 0) scale(0.94); }
+  }
+
+  /* ---- layout ------------------------------------------------------ */
+  --spacing-gutter: 1.25rem;
+  --container-page: 100rem;
+}
+
+/* ---- base ------------------------------------------------------------ */
+@layer base {
+  html {
+    background-color: var(--color-bg);
+    color-scheme: dark;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-bg font-sans text-ink antialiased;
+    overflow-x: clip;
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-red);
+    color: #080808;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-red);
+    outline-offset: 3px;
+  }
+
+  /* dark, thin scrollbar — part of the interface material */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-line) var(--color-bg);
+  }
+  *::-webkit-scrollbar { width: 10px; height: 10px; }
+  *::-webkit-scrollbar-track { background: var(--color-bg); }
+  *::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+    border: 3px solid var(--color-bg);
+  }
+
+  /* replacement-cursor mode (opted in by CustomCursor when allowed) */
+  html.cursor-hidden,
+  html.cursor-hidden * {
+    cursor: none !important;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* ---- components ------------------------------------------------------ */
+@layer components {
+  /* technical micro label */
+  .mono-label {
+    @apply font-mono text-micro uppercase text-dim;
+  }
+
+  /* outlined display type */
+  .text-outline {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--color-ink);
+  }
+  .text-outline-soft {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--color-line);
+  }
+  .text-outline-red {
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--color-red);
+  }
+
+  /* ghost numerals — faint architectural indices */
+  .ghost-numeral {
+    color: transparent;
+    -webkit-text-stroke: 1px #232323;
+    font-weight: 600;
+    line-height: 1;
+    user-select: none;
+    pointer-events: none;
+  }
+
+  /* marquee */
+  .marquee-track {
+    animation: var(--animate-marquee);
+    will-change: transform;
+  }
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee-track { animation: none; }
+  }
+
+  /* liquid lens (glass surface) — frosted fallback material */
+  .lens {
+    background:
+      linear-gradient(160deg, rgb(255 255 255 / 0.09), rgb(255 255 255 / 0.02) 42%, rgb(255 255 255 / 0.06));
+    backdrop-filter: blur(14px) saturate(1.15) brightness(1.06);
+    -webkit-backdrop-filter: blur(14px) saturate(1.15) brightness(1.06);
+    box-shadow:
+      inset 0 1px 0 0 rgb(255 255 255 / 0.14),
+      inset 0 0 0 1px rgb(255 255 255 / 0.06),
+      0 24px 60px rgb(0 0 0 / 0.55);
+  }
+  /* chromium-only: real refraction through an SVG displacement filter.
+     set programmatically when the engine supports backdrop-filter: url() */
+  .lens--refract {
+    backdrop-filter: url(#cx-lens-displace) blur(1px) saturate(1.2) brightness(1.07);
+    -webkit-backdrop-filter: url(#cx-lens-displace) blur(1px) saturate(1.2) brightness(1.07);
+  }
+  @media (prefers-reduced-transparency: reduce) {
+    .lens, .lens--refract {
+      background: var(--color-elevated);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+  }
+
+  /* hairline utility rows */
+  .rule-t { border-top: 1px solid var(--color-line); }
+
+  /* mini equalizer bars (CSS-driven, used inside the glass lens) */
+  .eq-bar {
+    transform-origin: bottom;
+    animation: eq 1.15s ease-in-out infinite;
+  }
+  @keyframes eq {
+    0%, 100% { transform: scaleY(0.35); }
+    50%      { transform: scaleY(1); }
+  }
+}

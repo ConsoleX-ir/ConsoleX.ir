@@ -1,14 +1,39 @@
+import { ArrowUpRight } from 'lucide-react'
 import type { ReactNode } from 'react'
-import { Link } from 'react-router'
+import { cn } from '../../lib/utils'
 
-type ArrowLinkProps = { to: string; children: ReactNode; variant?: 'primary' | 'text' | 'dark'; external?: boolean }
+interface ArrowLinkProps {
+  href: string
+  children: ReactNode
+  external?: boolean
+  className?: string
+  ariaLabel?: string
+}
 
-export default function ArrowLink({ to, children, variant = 'text', external = false }: ArrowLinkProps) {
-  const className = variant === 'primary'
-    ? 'group inline-flex min-h-12 items-center justify-between gap-8 border border-accent bg-accent px-4 font-mono text-[10px] text-white transition-colors hover:border-[#ff554a] hover:bg-[#ff554a] focus-visible:outline-2 focus-visible:outline-accent'
-    : `group inline-flex min-h-10 items-center justify-between gap-7 border-b py-2.5 font-mono text-[10px] transition-colors hover:border-accent ${variant === 'dark' ? 'border-black/35 text-ink hover:text-accent' : 'border-white/30 text-neutral-300 hover:text-paper'}`
-  const content = <>{children}<span className={`text-accent transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${variant === 'primary' ? 'text-white' : ''}`} aria-hidden="true">↗</span></>
-  return external
-    ? <a className={className} href={to} target="_blank" rel="noreferrer">{content}</a>
-    : <Link className={className} to={to}>{content}</Link>
+/** Technical link with a growing red underline and a nudging arrow. */
+export function ArrowLink({ href, children, external, className, ariaLabel }: ArrowLinkProps) {
+  return (
+    <a
+      href={href}
+      aria-label={ariaLabel}
+      {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}
+      className={cn(
+        'group inline-flex items-center gap-2 font-mono text-label uppercase text-ink transition-colors duration-300 hover:text-red',
+        className,
+      )}
+    >
+      <span className="relative py-1">
+        {children}
+        <span
+          aria-hidden="true"
+          className="absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 bg-red transition-transform duration-300 ease-swift group-hover:scale-x-100"
+        />
+      </span>
+      <ArrowUpRight
+        aria-hidden="true"
+        strokeWidth={1.5}
+        className="h-3.5 w-3.5 transition-transform duration-300 ease-swift group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+      />
+    </a>
+  )
 }

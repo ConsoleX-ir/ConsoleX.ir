@@ -1,1 +1,23 @@
-/node_modules
+# dependencies
+node_modules
+
+# production
+dist
+
+# misc
+.DS_Store
+*.pem
+*.log
+dev.log
+
+# env
+.env
+
+# typescript
+*.tsbuildinfo
+
+# sandbox runtime (not part of the project)
+.zscripts
+.z-ai-config
+.claude
+tool-results

@@ -1,7 +1,31 @@
-import type { ReactNode } from 'react'
+import { cn } from '../../lib/utils'
 
-type SectionLabelProps = { index: string; children: ReactNode }
+interface SectionLabelProps {
+  num: string
+  label: string
+  annotation?: string
+  className?: string
+}
 
-export default function SectionLabel({ index, children }: SectionLabelProps) {
-  return <p className="mb-0 flex items-center gap-3 font-mono text-[9px] uppercase tracking-[.09em] text-neutral-300"><span className="text-accent">{index}</span><i className="h-px w-[30px] bg-neutral-600" aria-hidden="true" />{children}</p>
+/** Editorial section opener: [index] — label — rule — annotation, plus a
+ *  faint architectural numeral for the desktop composition. */
+export function SectionLabel({ num, label, annotation, className }: SectionLabelProps) {
+  return (
+    <div className={cn('relative', className)}>
+      <div className="flex items-center gap-4">
+        <span className="font-mono text-micro uppercase text-red">[{num}]</span>
+        <span className="mono-label text-ink">{label}</span>
+        <span aria-hidden="true" className="h-px flex-1 bg-line" />
+        {annotation && (
+          <span className="mono-label hidden md:block">{annotation}</span>
+        )}
+      </div>
+      <span
+        aria-hidden="true"
+        className="ghost-numeral absolute -top-14 right-0 hidden select-none text-[10rem] lg:block"
+      >
+        {num}
+      </span>
+    </div>
+  )
 }
