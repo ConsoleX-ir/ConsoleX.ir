@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "next build && node -e \"require('fs').cpSync('.next/static','.next/standalone/.next/static',{recursive:true})\" && node -e \"require('fs').cpSync('public','.next/standalone/public',{recursive:true})\"",
+    "build": "next build && node -e \"require('fs').cpSync('.next/static','.next/standalone/.next/static',{recursive:true})\" && node -e \"const fs=require('fs');if(fs.existsSync('public')){fs.cpSync('public','.next/standalone/public',{recursive:true})}else{fs.mkdirSync('.next/standalone/public',{recursive:true})}\"",
     "start": "bun .next/standalone/server.js",
     "lint": "eslint .",
     "db:push": "prisma db push --accept-data-loss",
